@@ -35,4 +35,5 @@ jobs:
         env:
           SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
           SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "true"
         run: npx hardhat ignition deploy ignition/modules/Etudiants.ts --network sepolia
