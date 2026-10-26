@@ -30,3 +30,9 @@ jobs:
 
       - name: Run automated tests
         run: npx hardhat test
+
+      - name: Deploy to Sepolia
+        env:
+          SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+          SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
+        run: npx hardhat ignition deploy ignition/modules/Etudiants.ts --network sepolia
