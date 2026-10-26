@@ -1,57 +1,243 @@
-# Sample Hardhat 3 Project (`mocha` and `ethers`)
-
-This project showcases a Hardhat 3 project using `mocha` for tests and the `ethers` library for Ethereum interactions.
-
-To learn more about Hardhat 3, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3](https://hardhat.org/hardhat3-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+# Student Registry Smart Contract — Hardhat CI/CD
 
 ## Project Overview
 
-This example project includes:
+This project demonstrates the development, automated testing, continuous integration, and deployment of a Solidity smart contract using Hardhat and GitHub Actions.
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+The smart contract allows users to:
 
-## Usage
+* Register a student's last name and first name.
+* Retrieve all registered students.
+* Retrieve the total number of registered students.
 
-### Running Tests
+The contract is automatically compiled and tested using GitHub Actions and deployed to the Ethereum Sepolia test network.
 
-To run all the tests in the project, execute the following command:
+---
 
-```shell
+## Technologies Used
+
+* Solidity
+* Hardhat
+* TypeScript
+* Ethers.js
+* Mocha
+* Chai
+* Git
+* GitHub
+* GitHub Actions
+* Ethereum Sepolia Testnet
+* Hardhat Ignition
+
+---
+
+## Smart Contract
+
+The main smart contract is:
+
+```text
+contracts/Etudiants.sol
+```
+
+It contains a `struct` representing a student:
+
+```solidity
+struct Etudiant {
+    string nom;
+    string prenom;
+}
+```
+
+Students are stored inside a dynamic array:
+
+```solidity
+Etudiant[] private listeEtudiants;
+```
+
+### Main Functions
+
+#### ajouterEtudiant()
+
+Adds a new student to the blockchain.
+
+```solidity
+function ajouterEtudiant(
+    string memory _nom,
+    string memory _prenom
+) public
+```
+
+#### getEtudiants()
+
+Returns the complete list of registered students.
+
+```solidity
+function getEtudiants()
+    public
+    view
+    returns (Etudiant[] memory)
+```
+
+#### getNombreEtudiants()
+
+Returns the total number of registered students.
+
+```solidity
+function getNombreEtudiants()
+    public
+    view
+    returns (uint256)
+```
+
+---
+
+## Automated Tests
+
+The automated tests are located in:
+
+```text
+test/Etudiants.ts
+```
+
+The tests verify that:
+
+* A student can be successfully added.
+* The number of students is updated correctly.
+* Stored student information can be retrieved correctly.
+
+Run the tests locally with:
+
+```bash
 npx hardhat test
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+---
 
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
+## Compile the Smart Contract
+
+To compile the Solidity contracts:
+
+```bash
+npx hardhat compile
 ```
 
-### Make a deployment to Sepolia
+---
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
+## Deployment
 
-To run the deployment to a local chain:
+The Hardhat Ignition deployment module is located at:
 
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
+```text
+ignition/modules/Etudiants.ts
 ```
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+The contract can be deployed with:
 
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
-
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
-
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+```bash
+npx hardhat ignition deploy ignition/modules/Etudiants.ts
 ```
 
-After setting the variable, you can run the deployment with the Sepolia network:
+For Sepolia:
 
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+```bash
+npx hardhat ignition deploy ignition/modules/Etudiants.ts --network sepolia
 ```
+
+---
+
+## GitHub Actions CI/CD
+
+The GitHub Actions workflow is located at:
+
+```text
+.github/workflows/ci.yml
+```
+
+Every push to the `main` branch automatically performs the following workflow:
+
+```text
+Push to GitHub
+      ↓
+Install dependencies
+      ↓
+Compile Solidity contracts
+      ↓
+Run automated tests
+      ↓
+Deploy to Sepolia
+```
+
+Sensitive information is stored using GitHub Repository Secrets.
+
+The workflow uses:
+
+```text
+SEPOLIA_RPC_URL
+SEPOLIA_PRIVATE_KEY
+```
+
+The private key is never stored directly in the source code.
+
+---
+
+## Sepolia Deployment
+
+The smart contract was successfully deployed automatically to the Ethereum Sepolia test network using GitHub Actions.
+
+### Contract Address
+
+```text
+0x7e952A9C2542508953e56A12ad2f889aAa308Cf8
+```
+
+The deployment can be verified using Sepolia Etherscan.
+
+---
+
+## Project Architecture
+
+```text
+Developer
+   ↓
+Solidity Smart Contract
+   ↓
+Git Repository
+   ↓
+GitHub
+   ↓
+GitHub Actions
+   ↓
+Hardhat Compile
+   ↓
+Automated Tests
+   ↓
+Hardhat Ignition
+   ↓
+Ethereum Sepolia
+```
+
+---
+
+## Security
+
+Sensitive blockchain credentials such as the wallet private key are not included in the repository.
+
+They are stored securely using GitHub Actions Secrets.
+
+The `.gitignore` file prevents unnecessary or sensitive local files from being committed to the repository.
+
+---
+
+## Project Objective
+
+The objective of this practical project is to demonstrate how blockchain development and DevOps practices can be combined.
+
+The project integrates:
+
+* Smart contract development
+* Automated testing
+* Version control
+* Continuous Integration
+* Continuous Deployment
+* Blockchain deployment infrastructure
+
+This creates a complete modern development workflow from Solidity source code to automatic deployment on the Ethereum Sepolia test network.
